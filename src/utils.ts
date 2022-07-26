@@ -3,7 +3,6 @@
 import { ethers, ContractFactory, BigNumber, Wallet } from 'ethers';
 const { defaultAbiCoder, id, arrayify, keccak256 } = ethers.utils;
 import http from 'http';
-const { outputJsonSync } = require('fs-extra');
 const { sortBy } = require('lodash');
 
 export const logger = { log: console.log };
@@ -51,12 +50,6 @@ export const deployContract = async (wallet: Wallet, contractJson: any, args = [
     const contract = await factory.deploy(...args, { ...options });
     await contract.deployed();
     return contract;
-};
-export const setJSON = (data: any, name: string) => {
-    outputJsonSync(name, data, {
-        spaces: 2,
-        EOL: '\n',
-    });
 };
 export const httpGet = (url: string) => {
     return new Promise((resolve, reject) => {

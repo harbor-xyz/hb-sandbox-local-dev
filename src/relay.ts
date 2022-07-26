@@ -1,21 +1,10 @@
 'use strict';
 
-import { ethers, Wallet, Contract, providers, getDefaultProvider } from 'ethers';
-const { defaultAbiCoder, arrayify, keccak256, id, solidityPack, toUtf8Bytes } = ethers.utils;
+import { ethers, Wallet, Contract } from 'ethers';
+const { defaultAbiCoder, arrayify } = ethers.utils;
 const AddressZero = ethers.constants.AddressZero;
-import {
-    getSignedExecuteInput,
-    getRandomID,
-    getLogID,
-    defaultAccounts,
-    setJSON,
-    httpGet,
-    deployContract,
-    logger,
-    setLogger,
-} from './utils';
-import server from './server';
-import { Network, networks, NetworkOptions, NetworkInfo, NetworkSetup } from './Network';
+import { getSignedExecuteInput, getRandomID, getLogID, logger } from './utils';
+import { Network, networks } from './Network';
 import { getFee, getGasPrice, depositAddresses } from './networkUtils';
 
 export interface RelayData {
