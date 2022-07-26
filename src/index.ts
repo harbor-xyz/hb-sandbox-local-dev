@@ -1,18 +1,7 @@
 import { relay } from './relay';
 import { deployContract, defaultAccounts, setLogger } from './utils';
 import { networks } from './Network';
-import {
-    ChainCloneData,
-    getFee,
-    getGasPrice,
-    listen,
-    getNetwork,
-    getAllNetworks,
-    setupNetwork,
-    stop,
-    stopAll,
-    getDepositAddress,
-} from './networkUtils';
+import { getFee, getGasPrice, getNetwork, getAllNetworks, setupNetwork, stop } from './networkUtils';
 
 export const utils = {
     deployContract,
@@ -20,17 +9,4 @@ export const utils = {
     setLogger,
 };
 
-export {
-    ChainCloneData,
-    getFee,
-    getGasPrice,
-    listen,
-    getNetwork,
-    getAllNetworks,
-    setupNetwork,
-    stop,
-    stopAll,
-    getDepositAddress,
-    networks,
-    relay,
-};
+export { getFee, getGasPrice, getNetwork, getAllNetworks, setupNetwork, stop, networks, relay };

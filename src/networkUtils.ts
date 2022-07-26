@@ -102,28 +102,3 @@ export async function stop(network: string | Network) {
 }
 
 export const depositAddresses: any = {};
-
-export function getDepositAddress(
-    from: Network | string,
-    to: Network | string,
-    destinationAddress: string,
-    alias: string,
-    port: number | undefined = undefined
-) {
-    if (typeof from != 'string') from = from.name;
-    if (typeof to != 'string') to = to.name;
-    if (!port) {
-        const key = keccak256(id(from + ':' + to + ':' + destinationAddress + ':' + alias));
-        const address = new Wallet(key).address;
-        depositAddresses[from] = {
-            [address]: {
-                destinationChain: to,
-                destinationAddress: destinationAddress,
-                alias: alias,
-                privateKey: key,
-            },
-        };
-        return address;
-    }
-    return httpGet(`http:/localhost:${port}/getDepositAddress/${from}/${to}/${destinationAddress}/${alias}`);
-}
