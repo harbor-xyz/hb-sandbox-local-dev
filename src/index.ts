@@ -26,8 +26,6 @@ export {
     getFee,
     getGasPrice,
     listen,
-    createNetwork,
-    forkNetwork,
     getNetwork,
     getAllNetworks,
     setupNetwork,
@@ -38,6 +36,4 @@ export {
     testnetInfo,
     mainnetInfo,
     relay,
-    createAndExport,
-    forkAndExport,
 };

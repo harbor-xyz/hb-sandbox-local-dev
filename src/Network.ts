@@ -45,15 +45,15 @@ export interface NetworkInfo {
     tokens: { [key: string]: string };
 }
 export interface NetworkSetup {
-    name: string | undefined;
-    chainId: number | undefined;
-    userKeys: Wallet[] | undefined;
+    name?: string;
+    chainId?: number;
+    userKeys?: Wallet[];
     ownerKey: Wallet;
-    operatorKey: Wallet | undefined;
-    relayerKey: Wallet | undefined;
-    adminKeys: Wallet[] | undefined;
-    threshold: number | undefined;
-    lastRelayedBlock: number | undefined;
+    operatorKey?: Wallet;
+    relayerKey?: Wallet;
+    adminKeys?: Wallet[];
+    threshold?: number;
+    lastRelayedBlock?: number;
 }
 
 /*
