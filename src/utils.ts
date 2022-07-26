@@ -2,7 +2,6 @@
 
 import { ethers, ContractFactory, BigNumber, Wallet } from 'ethers';
 const { defaultAbiCoder, id, arrayify, keccak256 } = ethers.utils;
-import http from 'http';
 const { sortBy } = require('lodash');
 
 export const logger = { log: console.log };
@@ -50,38 +49,6 @@ export const deployContract = async (wallet: Wallet, contractJson: any, args = [
     const contract = await factory.deploy(...args, { ...options });
     await contract.deployed();
     return contract;
-};
-export const httpGet = (url: string) => {
-    return new Promise((resolve, reject) => {
-        http.get(url, (res) => {
-            const { statusCode } = res;
-            const contentType = res.headers['content-type'];
-            let error;
-            if (statusCode !== 200) {
-                error = new Error('Request Failed.\n' + `Status Code: ${statusCode}`);
-            } else if (!/^application\/json/.test(contentType!)) {
-                error = new Error('Invalid content-type.\n' + `Expected application/json but received ${contentType}`);
-            }
-            if (error) {
-                res.resume();
-                reject(error);
-                return;
-            }
-            res.setEncoding('utf8');
-            let rawData = '';
-            res.on('data', (chunk) => {
-                rawData += chunk;
-            });
-            res.on('end', () => {
-                try {
-                    const parsedData = JSON.parse(rawData);
-                    resolve(parsedData);
-                } catch (e) {
-                    reject(e);
-                }
-            });
-        });
-    });
 };
 
 export function setLogger(log: (...args: any) => void) {
