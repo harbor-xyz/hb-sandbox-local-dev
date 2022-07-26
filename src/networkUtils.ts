@@ -114,8 +114,10 @@ export async function setupNetwork(urlOrProvider: string | providers.Provider, o
     await chain._deployConstAddressDeployer();
     await chain._deployGateway();
     await chain._deployGasReceiver();
-    chain.tokens = {};
-    //chain.usdc = await chain.deployToken('Axelar Wrapped aUSDC', 'aUSDC', 6, BigInt(1e70));
+    const usdc = await chain.deployToken('Axelar Wrapped aUSDC', 'aUSDC', 6, BigInt(1e70));
+    chain.tokens = {
+        usdc: usdc.address,
+    };
     networks.push(chain);
     return chain;
 }

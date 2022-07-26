@@ -1,6 +1,5 @@
 import { relay } from './relay';
 import { deployContract, defaultAccounts, setLogger } from './utils';
-import { testnetInfo, mainnetInfo } from './info';
 import { networks } from './Network';
 import {
     ChainCloneData,
@@ -33,7 +32,5 @@ export {
     stopAll,
     getDepositAddress,
     networks,
-    testnetInfo,
-    mainnetInfo,
     relay,
 };
