@@ -1,31 +1,13 @@
 'use strict';
 
-import { ethers, Wallet, Contract, providers, getDefaultProvider } from 'ethers';
-const { defaultAbiCoder, keccak256, id, solidityPack, toUtf8Bytes } = ethers.utils;
+import { ethers, Wallet, Contract, providers } from 'ethers';
+const { keccak256, id } = ethers.utils;
 import { httpGet, logger } from './utils';
-import server from './server';
-import { Network, networks, NetworkOptions, NetworkInfo, NetworkSetup } from './Network';
-const { merge } = require('lodash');
-const fs = require('fs');
+import { Network, networks, NetworkInfo, NetworkSetup } from './Network';
 
 const IAxelarGateway = require('../artifacts/@axelar-network/axelar-cgp-solidity/contracts/interfaces/IAxelarGateway.sol/IAxelarGateway.json');
 const IAxelarGasReceiver = require('../artifacts/@axelar-network/axelar-cgp-solidity/contracts/interfaces/IAxelarGasService.sol/IAxelarGasService.json');
 const ConstAddressDeployer = require('axelar-utils-solidity/dist/ConstAddressDeployer.json');
-const AxelarGateway = require('../artifacts/@axelar-network/axelar-cgp-solidity/contracts/AxelarGateway.sol/AxelarGateway.json');
-
-let serverInstance: any;
-
-export interface ChainCloneData {
-    name: string;
-    gateway: string;
-    rpc: string;
-    chainId: number;
-    gasReceiver: string;
-    constAddressDeployer: string;
-    tokenName: string;
-    tokenSymbol: string;
-    tokens: { [key: string]: string };
-}
 
 export const getFee = (source: string | Network, destination: string | Network, alias: string) => {
     return 1e6;
@@ -33,15 +15,6 @@ export const getFee = (source: string | Network, destination: string | Network, 
 export const getGasPrice = (source: string | Network, destination: string | Network, tokenOnSource: string) => {
     return 1;
 };
-
-export function listen(port: number, callback: (() => void) | undefined = undefined) {
-    if (!callback)
-        callback = () => {
-            logger.log(`Serving ${networks.length} networks on port ${port}`);
-        };
-    serverInstance = server(networks);
-    return serverInstance.listen(port, callback);
-}
 
 export async function getNetwork(urlOrProvider: string | providers.Provider, info: NetworkInfo | undefined = undefined) {
     if (!info) info = (await httpGet(urlOrProvider + '/info')) as NetworkInfo;
@@ -126,16 +99,6 @@ export async function stop(network: string | Network) {
     if (typeof network == 'string') network = networks.find((chain) => chain.name == network)!;
     if (network.server != null) await network.server.close();
     networks.splice(networks.indexOf(network), 1);
-}
-
-export async function stopAll() {
-    while (networks.length > 0) {
-        await stop(networks[0]);
-    }
-    if (serverInstance) {
-        await serverInstance.close();
-        serverInstance = null;
-    }
 }
 
 export const depositAddresses: any = {};
