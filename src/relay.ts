@@ -196,7 +196,7 @@ const updateCallContractWithToken = async (
     const logsFrom = await from.gateway.queryFilter(filter, from.lastRelayedBlock + 1, blockNumber);
     for (let log of logsFrom) {
         const args: any = log.args;
-        const alias = getAliasFromSymbol(from.tokens, args.symbol);
+        const alias = args.symbol;
         const fee = getFee(from, args.destinationChain, alias);
         if (args.amount < fee) continue;
         const amountOut = args.amount.sub(fee);
@@ -204,7 +204,7 @@ const updateCallContractWithToken = async (
         const commandId = getLogID(from.name, log);
 
         const to = networks.find((chain: Network) => chain.name == args.destinationChain);
-        const destinationTokenSymbol = to!.tokens[alias];
+        const destinationTokenSymbol = alias;
 
         relayData.callContractWithToken[commandId] = {
             from: from.name,
@@ -213,7 +213,7 @@ const updateCallContractWithToken = async (
             destinationContractAddress: args.destinationContractAddress,
             payload: args.payload,
             payloadHash: args.payloadHash,
-            alias: alias,
+            alias,
             amountIn: args.amount,
             fee: fee,
             amountOut: amountOut,
