@@ -4,7 +4,6 @@ import { ethers, Wallet, Contract, providers } from 'ethers';
 import { logger } from './utils';
 const { defaultAbiCoder, arrayify, keccak256, toUtf8Bytes } = ethers.utils;
 const { getSignedExecuteInput, getRandomID, deployContract } = require('./utils');
-import http from 'http';
 
 const TokenDeployer = require('../artifacts/@axelar-network/axelar-cgp-solidity/contracts/TokenDeployer.sol/TokenDeployer.json');
 const AxelarGatewayProxy = require('../artifacts/@axelar-network/axelar-cgp-solidity/contracts/AxelarGatewayProxy.sol/AxelarGatewayProxy.json');
@@ -76,7 +75,6 @@ export class Network {
     isRemote: boolean | undefined;
     url: string | undefined;
     ganacheProvider: any;
-    server: http.Server | undefined;
     port: number | undefined;
     tokens: { [key: string]: string };
     constructor(networkish: any = {}) {
@@ -205,8 +203,7 @@ export class Network {
         const address = await this.gateway.tokenAddresses(symbol);
         return new Contract(address, BurnableMintableCappedERC20.abi, this.provider);
     }
-    async giveToken(address: string, alias: string, amount: BigInt) {
-        const symbol = this.tokens[alias] || alias;
+    async giveToken(address: string, symbol: string, amount: BigInt) {
         const data = arrayify(
             defaultAbiCoder.encode(
                 ['uint256', 'uint256', 'bytes32[]', 'string[]', 'bytes[]'],
@@ -252,22 +249,5 @@ export class Network {
             constAddressDeployer: this.constAddressDeployer.address,
             tokens: this.tokens,
         };
-    }
-}
-
-export class RemoteNetwork extends Network {
-    async relay() {
-        await new Promise((resolve: (value: unknown) => void, reject: (value: unknown) => void) => {
-            http.get(this.url + '/relay', (res: http.IncomingMessage) => {
-                const { statusCode } = res;
-                if (statusCode !== 200) {
-                    reject(null);
-                }
-                res.on('data', (chunk) => {});
-                res.on('end', () => {
-                    resolve(null);
-                });
-            });
-        });
     }
 }

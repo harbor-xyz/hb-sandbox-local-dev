@@ -20,7 +20,7 @@ export const getGasPrice = (source: string | Network, destination: string | Netw
  * @returns {Network}
  */
 export async function setupNetwork(urlOrProvider: string | providers.Provider, options: NetworkSetup) {
-    const chain = new Network();
+    const chain = new Network({ tokens: {} });
     chain.name = options.name != null ? options.name : `Chain ${networks.length + 1}`;
     chain.provider = typeof urlOrProvider === 'string' ? ethers.getDefaultProvider(urlOrProvider) : urlOrProvider;
     chain.chainId = (await chain.provider.getNetwork()).chainId;
@@ -44,16 +44,10 @@ export async function setupNetwork(urlOrProvider: string | providers.Provider, o
     await chain._deployGasReceiver();
     const usdc = await chain.deployToken('Axelar Wrapped aUSDC', 'aUSDC', 6, BigInt(1e70));
     chain.tokens = {
-        usdc: usdc.address,
+        aUSDC: usdc.address,
     };
     networks.push(chain);
     return chain;
-}
-
-export async function stop(network: string | Network) {
-    if (typeof network == 'string') network = networks.find((chain) => chain.name == network)!;
-    if (network.server != null) await network.server.close();
-    networks.splice(networks.indexOf(network), 1);
 }
 
 export const depositAddresses: any = {};
